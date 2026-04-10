@@ -3,10 +3,10 @@ Personal understanding repository to apply mathematical concepts and widely used
 C language to understand how stuff works at the basic level.
 
 <table>
-<th>
-<td>Name</td>
-<td>Status</td>
-</th>
+<tr>
+<th>Name</th>
+<th>Status</th>
+</tr>
 <tr>
 <td>read\_csv() and Simple Linear Regresssion (int)</td>
 <td>Implemented - Apr 10 '26</td>
