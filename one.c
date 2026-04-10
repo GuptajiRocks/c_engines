@@ -19,11 +19,11 @@ struct reg_props {
   int tot_x1, tot_x2;
   double m_x1, m_x2;
   double numer, denom;
+  double eq_m, eq_c;
 };
 
-
 struct reg_props read_csv(char* arr) {
-  struct reg_props s = {0, NULL, NULL, 0, 0, 0.0, 0.0, 0.0, 0.0};
+  struct reg_props s = {0, NULL, NULL, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
   char buffer[100];
   int x1, x2 = 0;
 
@@ -48,13 +48,13 @@ struct reg_props read_csv(char* arr) {
   }
   fclose(fptr);
 
-  s.m_x1 = (s.tot_x1) / (s.len);
-  s.m_x2 = (s.tot_x2) / (s.len);
+  s.m_x1 = (double)s.tot_x1 / s.len;
+  s.m_x2 = (double)s.tot_x2 / s.len;
 
   return s;
 }
 
-double eqn(struct reg_props val) {
+struct reg_props eqn(struct reg_props val) {
   for (int i = 0; i < val.len; i++) {
     val.numer += ((val.arr2[i] - val.m_x2) * (val.arr1[i] - val.m_x1));
   }
@@ -64,20 +64,25 @@ double eqn(struct reg_props val) {
     val.denom += ((val.arr1[i] - val.m_x1) * (val.arr1[i] - val.m_x1));
   }
 
-  return val.numer/val.denom;
+  val.eq_m = val.numer / val.denom;
+  val.eq_c = (val.m_x2) - ((val.eq_m)*(val.m_x1));
+
+  return val;
 }
 
 
 
 int main() {
-  struct reg_props main = {0, NULL, NULL, 0, 0, 0.0, 0.0, 0.0, 0.0};
-  main = read_csv("sal_dat.txt");
-
+  struct reg_props main = {0, NULL, NULL, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+  main = read_csv("test2.txt");
+  main = eqn(main);
   printf("Mean of X1: %.2f\n", main.m_x1);
   printf("Mean of X2: %.2f\n", main.m_x2);
+  //printf("Total of X1: %d\n", main.tot_x1);
+  printf("Equation of the Line is: y = %.2fx + %.2f\n", main.eq_m, main.eq_c); 
 
-  double m_val = eqn(main);
-  printf("value of m: %.2f\n", m_val);
+  free(main.arr1);
+  free(main.arr2);
   return 0;
 }
 
